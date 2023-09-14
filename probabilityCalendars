@@ -1,0 +1,48 @@
+# A team member was trying to figure out a good time for 9 of us to all meet during the week; his mind exploaded when he typed all of our names
+# into his calendar to view when we'd all be available. That got me thinking...what's the probability that we all have the same :30 minute slot
+# available on our calendars? Likely very small...and likely not even worth thinking about...but I did. And I started to think harder and think 
+# about the assumptions. 30 minute meeting, west coast and east coast teammates, 70% utilization for customer meetings so only 30% of the time
+# could be available...
+
+def calculate_probability(team_T, probability_unavailable, num_sessions):
+  """ Calculates the probability of a team being available for a meeting, taking into account the number of 30-minute sessions.
+
+  Args:
+    team_T = The total size of the team.
+    probability_unavaiable = The probability that a single team member is unavailable for a given 30-minute window.
+    num_sessions: The number of 30-minute sessions available in a day
+
+  Returns:
+    The probability of all team members are available for a given 30-minute window.
+
+
+  """
+
+  # Calculate the P that all team members are available for a 30 minute window.
+  probability_all_available = (1 - probability_unavailable) ** team_T
+
+  # Bound hte probability by the number of 30-mintue sessions available
+  probability_all_available = min(probability_all_available, num_sessions / 16) # 16 because 8 hours in a day * 2 = 16 sessions...if there are west coast teammates that # would be 10 (5 hours in a day * 2)
+
+  return probability_all_available
+
+def main(): 
+  """ Calculates the P of a team being available for a meeting, taking into account the number of 30-minute sessions."""
+  # Get the size of the team from the user
+  team_T = int(input("Enter the team size: "))
+   
+  # Input the average utilization for the team, then it will calculate the time unavailable
+  avg_U = int(input("Enter the average utilization for the team: "))
+  probability_unavailble = (1-(avg_U/100))
+
+  # Get the number of 30-miunte sessions available from the user
+  num_session = int(input("Enter the number of 30-minute sessions available in your day (8 hour day = 16 sessions): "))
+
+  # Caluclate the probability of all team members being available for a meeting
+  probability_all_available = calculate_probability(team_T, probability_unavailble, num_session)
+
+  # Print the probability to the user
+  print(f"The probability of all team members being available for a meeting is {probability_all_available: .0%}")
+
+if __name__ == "__main__":
+  main()
